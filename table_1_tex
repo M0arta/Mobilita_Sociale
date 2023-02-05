@@ -1,0 +1,127 @@
+
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{1}{c}}
+\toprule
+                    &\multicolumn{1}{c}{} \\
+\midrule
+Family Q1           &                     \\
+First income quintile&         242         \\
+                    &                     \\
+\addlinespace
+Second income quintile&         112         \\
+                    &                     \\
+\addlinespace
+Thrid income quintile&          47         \\
+                    &                     \\
+\addlinespace
+Fourth income quintile&          13         \\
+                    &                     \\
+\addlinespace
+Fifth income quintile&           2         \\
+                    &                     \\
+\addlinespace
+Total               &         416         \\
+                    &                     \\
+\midrule
+Family Q2           &                     \\
+First income quintile&         460         \\
+                    &                     \\
+\addlinespace
+Second income quintile&         386         \\
+                    &                     \\
+\addlinespace
+Thrid income quintile&         305         \\
+                    &                     \\
+\addlinespace
+Fourth income quintile&         183         \\
+                    &                     \\
+\addlinespace
+Fifth income quintile&          76         \\
+                    &                     \\
+\addlinespace
+Total               &        1410         \\
+                    &                     \\
+\midrule
+Family Q3           &                     \\
+First income quintile&         405         \\
+                    &                     \\
+\addlinespace
+Second income quintile&         458         \\
+                    &                     \\
+\addlinespace
+Thrid income quintile&         445         \\
+                    &                     \\
+\addlinespace
+Fourth income quintile&         398         \\
+                    &                     \\
+\addlinespace
+Fifth income quintile&         233         \\
+                    &                     \\
+\addlinespace
+Total               &        1939         \\
+                    &                     \\
+\midrule
+Family Q4           &                     \\
+First income quintile&         346         \\
+                    &                     \\
+\addlinespace
+Second income quintile&         385         \\
+                    &                     \\
+\addlinespace
+Thrid income quintile&         452         \\
+                    &                     \\
+\addlinespace
+Fourth income quintile&         480         \\
+                    &                     \\
+\addlinespace
+Fifth income quintile&         482         \\
+                    &                     \\
+\addlinespace
+Total               &        2145         \\
+                    &                     \\
+\midrule
+Family Q5           &                     \\
+First income quintile&         182         \\
+                    &                     \\
+\addlinespace
+Second income quintile&         294         \\
+                    &                     \\
+\addlinespace
+Thrid income quintile&         397         \\
+                    &                     \\
+\addlinespace
+Fourth income quintile&         549         \\
+                    &                     \\
+\addlinespace
+Fifth income quintile&         841         \\
+                    &                     \\
+\addlinespace
+Total               &        2263         \\
+                    &                     \\
+\midrule
+Total               &                     \\
+First income quintile&        1635         \\
+                    &                     \\
+\addlinespace
+Second income quintile&        1635         \\
+                    &                     \\
+\addlinespace
+Thrid income quintile&        1646         \\
+                    &                     \\
+\addlinespace
+Fourth income quintile&        1623         \\
+                    &                     \\
+\addlinespace
+Fifth income quintile&        1634         \\
+                    &                     \\
+\addlinespace
+Total               &        8173         \\
+                    &                     \\
+\midrule
+Observations        &        8173         \\
+\bottomrule
+\multicolumn{2}{l}{\footnotesize \textit{t} statistics in parentheses}\\
+\multicolumn{2}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}
