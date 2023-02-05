@@ -1,0 +1,65 @@
+clear
+cd/ 
+cd home
+cd marta 
+cd Downloads
+cd Social_Mobility
+
+use genitori_1986.dta
+rename studio studio_f
+gen log_y = log(y)
+
+reg  log_y eta sex studio_f regione
+
+estimates store coefficients 
+
+clear
+
+use figli_2020_.dta
+
+predict predicted_y, xb
+
+local N =  r(N)
+
+gen log_y_son = log(y)
+
+//*Create a new variable for the deciles of the predicted y **//
+
+xtile quintile_pred_y = predicted_y,n(5)
+
+//** Create a new variable for the quintile of the starting income 
+xtile quintile_y = log_y_son,n(5) **//
+
+
+//* Create table with named quintile  cathegories **//
+
+outsheet quintile_y quintile_pred_y using pred.csv, comma
+
+label values quintile_y qvalues
+label def qvalues 1 "First income quintile", modify
+label def qvalues 2 "Second income quintile", modify
+label def qvalues 3 "Thrid income quintile", modify
+label def qvalues 4 "Fourth income quintile", modify
+label def qvalues 5 "Fifth income quintile", modify
+
+label values quintile_pred_y  pqvalues
+label def pqvalues 1 "Family Q1", modify
+label def pqvalues 2 "Family Q2", modify
+label def pqvalues 3 "Family Q3", modify
+label def pqvalues 4 "Family Q4", modify
+label def pqvalues 5 "Family Q5", modify
+
+tab quintile_y quintile_pred_y
+
+
+/** Make histogram to show distribution of income by quintile **//
+
+hist log_y_son, by (quintile_y)
+graph export "/home/marta/Downloads/Social_Mobility/Distribuzione_reddito_quintili_figli.png", as(png) name("Graph")
+
+
+
+
+
+
+
