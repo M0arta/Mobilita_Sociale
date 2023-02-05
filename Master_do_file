@@ -294,8 +294,6 @@ keep if quintile == 5
 
 save q5_gen.dt.replace
 
-
-
 gen log_y = log(y)
 keep if log_y != .
 
@@ -317,6 +315,46 @@ reg log_y_son predicted_y
 
 esttab using TABLE_q5.tex, label 
 esttab using TABLE_q5.doc, label
+
+clear
+
+//** Produce intergenerational social mobility matrix **//
+
+use genitori_1986.dta
+rename studio studio_f
+
+reg  log_y eta sex studio_f regione
+
+estimates store coefficients 
+
+clear
+
+use figli_2020_.dta
+
+predict predicted_y, xb
+
+gen log_y_son = log(y)
+
+// Create a new variable for the deciles of the predicted y
+egen quintile_pred_y = group(predicted_y), nquantiles(5)
+
+// Create a new variable for the quintile of the starting income 
+egen quintile_y = group(log_y_son), nquantiles(5)
+
+// Cross-tabulate the deciles of y and x to create the intergenerational mobility matrix
+tab quintile_pred_y egen quintile_y, matcell(counts)
+
+// Divide the counts by the total number of observations to get the transition probabilities
+
+forval i = 1/10 {
+    forval j = 1/10 {
+        scalar transition_prob_{i,j} = counts[`i',`j']/sum(counts)
+    }
+}
+
+graph matrix mobility_matrix, label(rows(2) cols(2)) heatmap 
+matrix list mobility_matrix
+save mobility_matrix.txt, replace
 
 
 
