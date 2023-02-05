@@ -7,6 +7,7 @@ e poter osservare i pattern di mobilità tra categorie socioeconomiche.
 
 figli_2020.dta --> contiene i dati sulla popolazione 25-45 yo nel 2020 
 genitori_1986.dta --> contiene i dati sulla popolazione 25-45 yo nel 1986
+q20a.dta --> contiene informazioni addizionali su famiglia di origine dei figli rispondenti
 
 #Variabili: 
 
@@ -19,12 +20,6 @@ area 5 : divisione Italia in 5 macro aree
 Attualmente lavorando su: come assegnare i figli agli pseudo genitori
 
 
-#Analisi pianificata
-
-
-Quintile_figli_i = alpha + beta_1 * Quintile_genitore_i + beta_2 + vettore di controlli_i + errore_i
-
-i: subscript per ciascuna unita crossectionale
-controlli: eta, sesso, regione##macroarea, numero componenti nella famiglia, livello di istruzione
+# Analisi in master_do_file
 
 
