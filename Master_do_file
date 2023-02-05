@@ -316,12 +316,13 @@ reg log_y_son predicted_y
 esttab using TABLE_q5.tex, label 
 esttab using TABLE_q5.doc, label
 
-clear
+clear 
 
 //** Produce intergenerational social mobility matrix **//
 
 use genitori_1986.dta
 rename studio studio_f
+gen log_y = log(y)
 
 reg  log_y eta sex studio_f regione
 
@@ -333,31 +334,28 @@ use figli_2020_.dta
 
 predict predicted_y, xb
 
+local N =  r(N)
+
 gen log_y_son = log(y)
 
 // Create a new variable for the deciles of the predicted y
-egen quintile_pred_y = group(predicted_y), nquantiles(5)
+
+xtile quintile_pred_y = predicted_y,n(5)
 
 // Create a new variable for the quintile of the starting income 
-egen quintile_y = group(log_y_son), nquantiles(5)
+xtile quintile_y = log_y_son,n(5)
 
 // Cross-tabulate the deciles of y and x to create the intergenerational mobility matrix
-tab quintile_pred_y egen quintile_y, matcell(counts)
+tab quintile_pred_y quintile_y, matcell(counts)
+
+keep counts !=  .
 
 // Divide the counts by the total number of observations to get the transition probabilities
 
-forval i = 1/10 {
-    forval j = 1/10 {
-        scalar transition_prob_{i,j} = counts[`i',`j']/sum(counts)
-    }
-}
+matrix transition_probs = counts/ `N'
 
-graph matrix mobility_matrix, label(rows(2) cols(2)) heatmap 
-matrix list mobility_matrix
-save mobility_matrix.txt, replace
-
-
-
-
+graph matrix transition_probs, label(rows(2) cols(2)) heatmap 
+matrix list transition_probs
+save transition_probs.txt, replace
 
 
