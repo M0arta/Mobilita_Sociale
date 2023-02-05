@@ -358,4 +358,8 @@ graph matrix transition_probs, label(rows(2) cols(2)) heatmap
 matrix list transition_probs
 save transition_probs.txt, replace
 
+estpost matrix transition_probs, nogap
+esttab transition_probs, cells(counts) label 
 
+esttab transition_probs, cells(counts) label  , replace 
+file  transition_probs.tex
