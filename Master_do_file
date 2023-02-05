@@ -345,32 +345,9 @@ xtile quintile_pred_y = predicted_y,n(5)
 // Create a new variable for the quintile of the starting income 
 xtile quintile_y = log_y_son,n(5)
 
-// Cross-tabulate the deciles of y and x to create the intergenerational mobility matrix
-tab quintile_pred_y quintile_y, matcell(counts)
+outsheet quintile_y quintile_pred_y using pred.csv, comma
 
-
-// Check if the matrix is created and exclude missing values
-if _rc == 0 {
-display "Matrix counts' created successfully" } else { display "Error creating matrix counts'"
-}
-
-if missing(counts) {
-display "Matrix counts' contains missing values" drop if missing(counts) } else { display "Matrix counts' does not contain missing values"
-}
-
-// Divide the counts by the total number of observations to get the transition probabilities
-
-matrix transition_probs = counts/ `N'
-
-graph matrix transition_probs, label(rows(2) cols(2)) heatmap 
-matrix list transition_probs
-save transition_probs.txt, replace
-
-estpost matrix transition_probs, nogap
-esttab transition_probs, cells(counts) label 
-
-esttab transition_probs, cells(counts) label  , replace 
-file  transition_probs.tex
+/*From here look at pytho file called mobility_matrix.do*/
 
 
 
