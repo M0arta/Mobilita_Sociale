@@ -1,0 +1,325 @@
+///// ** MASTER DO-FILE **/////
+
+//*  starting from figli_2020.dta and pseudo_genitori_1986.dta **//
+
+//** add informations of family of origin for parents to figli_2020.dta ** //
+
+clear
+cd/ 
+cd home
+cd marta 
+cd Downloads
+cd Social_Mobility
+use q20a.dta
+ssc install estout 
+
+//** Create title of study of family of origin variable **//
+
+/*respondent is the uniquely identified unit*/
+
+rename stupcf studio_origp
+rename stumcf studio_origm
+lab var studio_origp "Titolo  di studio padre ad età pr"
+lab var studio_origm "Titolo  di studio madre ad età pr"
+
+egen mean_stup = mean(studio_origp)
+egen mean_stum = mean(studio_origm)
+
+replace  studio_origp = mean_stup if (studio_origp == 7)
+replace  studio_origm = mean_stum if (studio_origm == 7)
+
+
+gen studio_f = (studio_origp + studio_origm)/2
+keep if studio_f != .
+
+
+
+//** Create citizenship of family of origin variable **//
+
+/*respondent is the uniquely identified unit*/
+
+rename citpcf cit_origp
+rename citmcf cit_origm 
+
+lab var cit_origp "Cittadinanza italiana padre ad età pr"
+lab var cit_origm "Cittadinanza italiana madre ad età pr"
+
+egen mean_citp = mean(cit_origp)
+egen mean_citm = mean(cit_origm)
+
+replace  cit_origp = mean_citp if (cit_origp == 3)
+replace  cit_origm = mean_citm if (cit_origm == 3)
+
+gen cit_f = (cit_origp + cit_origm)/ 2
+keep if cit_f != . 
+
+
+//* keep only usefull variables *//
+
+keep nquest cit_f studio_f
+
+save orign.dta, replace
+
+//** merge it into the figli_2020.dta dataset **// 
+
+
+joinby nquest using figli_2020.dta
+
+save figli_2020_.dta, replace
+clear
+
+
+//**Use pseudo_genitori dataset : estimate and store the coefficients by regressing the log of income on socioeconomic characteristics **// 
+
+
+use genitori_1986.dta
+
+gen log_y = log(y)
+keep if log_y != .
+
+rename studio studio_f
+
+reg  log_y eta sex studio_f regione
+
+ //** here these are the same names that in the other dataset and stata assigns**//
+
+
+estimates store coefficients 
+
+save genitori_1986_.dta, replace
+
+clear
+
+
+//*switch to the figli_2020_.dta to use the coefficients to predict the income of the childrens**/
+
+
+use figli_2020_.dta
+
+predict predicted_y, xb
+
+gen log_y_son = log(y)
+
+reg log_y_son predicted_y
+
+esttab using TABLE_1.tex, label 
+esttab using TABLE_1.doc, label
+
+clear 
+
+//**run regressions for each quintile **//
+
+//** QUINTILE 1 **//
+
+use figli_2020_.dta 
+
+keep if quintile == 1 
+
+save q1_figli.dta, replace
+
+clear 
+
+use genitori_1986.dta
+
+keep if quintile == 1
+
+save q1_gen.dta, replace
+
+gen log_y = log(y)
+keep if log_y != .
+
+rename studio studio_f
+
+reg  log_y eta sex studio_f regione
+
+estimates store coefficients 
+
+clear
+
+use q1_figli.dta
+
+predict predicted_y, xb
+
+gen log_y_son = log(y)
+
+reg log_y_son predicted_y
+
+esttab using TABLE_q1.tex, label
+esttab using TABLE_q1.doc, label
+
+clear
+
+
+//** QUINTILE 2 **//
+
+use figli_2020_.dta 
+
+keep if quintile == 2 
+
+save q2_figli.dta, replace
+
+clear 
+
+use genitori_1986.dta
+
+keep if quintile == 2
+
+save q2_gen.dt.replace
+
+gen log_y = log(y)
+keep if log_y != .
+
+rename studio studio_f
+
+reg  log_y eta sex studio_f regione
+
+estimates store coefficients 
+
+clear
+
+use q2_figli.dta
+
+predict predicted_y, xb
+
+gen log_y_son = log(y)
+
+reg log_y_son predicted_y
+
+esttab using TABLE_q2.tex, label 
+esttab using TABLE_q2.doc, label
+
+
+
+clear 
+
+
+
+//** QUINTILE 3 **//
+
+use figli_2020_.dta 
+
+keep if quintile == 3
+
+save q3_figli.dta, replace
+
+clear 
+
+use genitori_1986.dta
+
+keep if quintile == 3
+
+save q3_gen.dt.replace
+
+gen log_y = log(y)
+keep if log_y != .
+
+rename studio studio_f
+
+reg  log_y eta sex studio_f regione
+
+estimates store coefficients 
+
+clear
+
+use q3_figli.dta
+
+predict predicted_y, xb
+
+gen log_y_son = log(y)
+
+reg log_y_son predicted_y
+
+esttab using TABLE_q3.tex, label 
+esttab using TABLE_q3.doc, label
+
+
+clear
+
+
+//** QUINTILE 4 **//
+
+use figli_2020_.dta 
+
+keep if quintile == 4 
+
+save q4_figli.dta, replace
+
+clear 
+
+use genitori_1986.dta
+
+keep if quintile == 4
+
+save q4_gen.dt.replace
+
+
+gen log_y = log(y)
+keep if log_y != .
+
+rename studio studio_f
+
+reg  log_y eta sex studio_f regione
+
+estimates store coefficients 
+
+clear
+
+use q4_figli.dta
+
+predict predicted_y, xb
+
+gen log_y_son = log(y)
+
+reg log_y_son predicted_y
+
+esttab using TABLE_q4.tex, label 
+esttab using TABLE_q4.doc, label
+
+
+clear
+
+//** QUINTILE 5 **//
+
+use figli_2020_.dta 
+
+keep if quintile == 5
+
+save q5_figli.dta, replace
+
+clear 
+
+use genitori_1986.dta
+
+keep if quintile == 5
+
+save q5_gen.dt.replace
+
+
+
+gen log_y = log(y)
+keep if log_y != .
+
+rename studio studio_f
+
+reg  log_y eta sex studio_f regione
+
+estimates store coefficients 
+
+clear
+
+use q5_figli.dta
+
+predict predicted_y, xb
+
+gen log_y_son = log(y)
+
+reg log_y_son predicted_y
+
+esttab using TABLE_q5.tex, label 
+esttab using TABLE_q5.doc, label
+
+
+
+
+
+
