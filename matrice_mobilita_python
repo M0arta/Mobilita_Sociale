@@ -1,0 +1,71 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load the data into a Pandas dataframe
+df = pd.read_csv("pred.csv")
+
+# Generate the counts matrix
+counts = pd.crosstab(df['quintile_y'], df['quintile_pred_y'])
+
+plt.imshow(counts, cmap='hot', interpolation='nearest')
+plt.xlabel("Quintile of predicted log(y)")
+plt.ylabel("Quintile of log(y) in son")
+plt.xticks(np.arange(5), ["1", "2", "3", "4", "5"])
+plt.yticks(np.arange(5), ["1", "2", "3", "4", "5"])
+plt.colorbar()
+
+# Save the heatmap as an image
+plt.savefig("heatmap.png", dpi=300)
+
+
+# Robustness check 1
+
+
+# Plot the proportion of observations in each quintile of predicted log(y)
+fig2, ax2 = plt.subplots()
+quintile_pred_y_counts = df['quintile_pred_y'].value_counts()
+ax2.bar(np.arange(5), quintile_pred_y_counts / N, align='center')
+plt.xlabel("Quintile of predicted log(y)")
+plt.ylabel("Proportion of observations")
+plt.xticks(np.arange(5), ["1", "2", "3", "4", "5"])
+
+# Plot the proportion of observations in each quintile of log(y) in son
+fig3, ax3 = plt.subplots()
+quintile_y_counts = df['quintile_y'].value_counts()
+ax3.bar(np.arange(5), quintile_y_counts / N, align='center')
+plt.xlabel("Quintile of log(y) in son")
+plt.ylabel("Proportion of observations")
+plt.xticks(np.arange(5), ["1", "2", "3", "4", "5"])
+
+# Robustness check 2
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load the data into a Pandas dataframe
+df = pd.read_csv("pred.csv")
+
+# Calculate the distribution of starting quintiles
+quintile_y_counts = df['quintile_y'].value_counts().sort_index()
+quintile_y_proportions = quintile_y_counts / df.shape[0]
+
+# Calculate the distribution of ending quintiles
+quintile_pred_y_counts = df['quintile_pred_y'].value_counts().sort_index()
+quintile_pred_y_proportions = quintile_pred_y_counts / df.shape[0]
+
+# Create the stacked bar plot
+fig, ax = plt.subplots()
+
+bar_width = 0.35
+bar1 = ax.bar(np.arange(5) - bar_width/2, quintile_y_proportions, bar_width, label='Starting quintile')
+bar2 = ax.bar(np.arange(5) + bar_width/2, quintile_pred_y_proportions, bar_width, label='Ending quintile')
+
+ax.set_xlabel("Quintile")
+ax.set_ylabel("Proportion of observations")
+ax.set_xticks(np.arange(5))
+ax.legend()
+
+plt.show()
+
