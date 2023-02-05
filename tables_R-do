@@ -1,0 +1,21 @@
+install.packages("xtable")
+install.packages("haven")
+install.packages("dplyr")
+library(xtable)
+library(haven)
+library(dplyr)
+tables <- read_dta("~/Downloads/Social_Mobility/tables.dta")
+View(tables)
+
+quintile_pred_y <- tables$quintile_pred_y
+quintile_y <- tables$quintile_y
+quintile <- tables$quintile
+log_y_son <- tables$log_y_son
+
+table1 <- table(quintile_y, quintile_pred_y)
+View(table1)
+
+ table2 <- tables %>% 
+   group_by(quintile_pred_y) %>% 
+   summarize(mean = mean(log_y_son), sd = sd(log_y_son), max = max(log_y_son))
+ View(table2)
