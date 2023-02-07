@@ -1,0 +1,174 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+######################## Creating the HEATMAP by headcount##############################
+
+# Load the data into a Pandas dataframe
+df = pd.read_csv("pred.csv")
+
+# Generate the counts matrix
+counts = pd.crosstab(df['quintile_y'], df['quintile_pred_y'])
+
+plt.imshow(counts, cmap='hot', interpolation='nearest')
+plt.xlabel("Quintile predetto dal background")
+plt.ylabel("Quintile attuale 2020")
+plt.xticks(np.arange(5), ["1", "2", "3", "4", "5"])
+plt.yticks(np.arange(5), ["1", "2", "3", "4", "5"])
+plt.colorbar()
+
+# Save the heatmap as an image
+plt.savefig("heatmap.png", dpi=300)
+
+
+
+
+######## Creating a table with the MATRIX WITH NUMBERS instead of colors#####################
+# Creating a table with the MATRIX WITH NUMBERS instead of colors
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+df = pd.read_csv("pred.csv")
+counts = pd.crosstab(df['quintile_y'], df['quintile_pred_y'])
+
+# Rename the variables
+df = df.rename(columns={'quintile_y': 'quintile_attuale', 'quintile_pred_y': 'quintile_background'})
+
+# Replace categorical values with new names 
+df['quintile_attuale'].replace({1: 'Q1', 2: 'Q2', 3: 'Q3', 4: 'Q4', 5: 'Q5'}, inplace=True)
+df['quintile_background'].replace({1: 'Primo quintile', 2: 'Secondo quintile', 3: 'Terzo quintile', 4: 'Quarto quintile', 5: 'Quinto quintile'}, inplace=True)
+
+# Generate the counts matrix
+counts = pd.crosstab(df['quintile_attuale'], df['quintile_background'])
+
+# Plot the table
+ax = plt.subplot(111, frame_on=False) # no visible frame
+ax.xaxis.set_visible(False)  # hide the x axis
+ax.yaxis.set_visible(False)  # hide the y axis
+
+table = plt.table(cellText=counts.values,
+                  rowLabels=['Q1p','Q2p', 'Q3p', 'Q4p', 'Q5p'],
+                  colLabels=['Q1','Q2', 'Q3', 'Q4', 'Q5'],
+                  cellLoc='center',
+                  rowLoc='center',
+                  loc='center')
+table.set_fontsize(14)
+table.auto_set_font_size(False)
+table.set_fontsize(14)
+table.scale(2, 2.5)
+
+plt.title('Matrice di Mobilità Intergenerazionale', fontsize=18)
+plt.show()
+plt.savefig("matrice_di_mobilità_intergenerazionale.png", format='png',dpi=150)
+
+################# Do heat map and matrix with numbers but using PERCENTAGE instead of head count by transition #############################
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+df = pd.read_csv("pred.csv")
+counts = pd.crosstab(df['quintile_y'], df['quintile_pred_y'])
+
+# Generate variable for percentages starting by headcount
+
+percentages = counts.div(counts.sum(axis=1), axis=0).mul(100)
+
+fig, ax = plt.subplots(figsize=(10,10))
+im = ax.imshow(percentages)
+ax.set_xticks(np.arange(5), ["Q1", "Q2", "Q3", "Q4", "Q5"])
+ax.set_yticks(np.arange(5), ["Q1p", "Q2p", "Q3p", "Q4p", "Q5p"])
+cbar = ax.figure.colorbar(im, 
+                          ax = ax,
+                          shrink=0.5 )
+plt.setp(ax.get_xticklabels(),
+         rotation = 45,
+         ha = "right",
+         rotation_mode = "anchor")
+ax.set_title("Matrice di mobilita' sociale", size=20)
+fig.tight_layout()
+plt.savefig("heatmap_blue.png",
+                    format='png',dpi=150)
+
+############################# Matrix with numbers using percentages ######################################################
+
+ax = plt.subplot(111, frame_on=False) # no visible frame
+ax.xaxis.set_visible(False) # hide the x axis
+ax.yaxis.set_visible(False) # hide the y axis
+
+table = plt.table(cellText=percentages.values.round(3),
+rowLabels=['Q1p','Q2p', 'Q3p', 'Q4p', 'Q5p'],
+colLabels=['Q1','Q2', 'Q3', 'Q4', 'Q5'],
+cellLoc='center',
+rowLoc='center',
+loc='center')
+table.set_fontsize(14)
+table.auto_set_font_size(False)
+table.scale(1, 1.5)
+plt.title('Matrice di Mobilità Intergenerazionale %', fontsize=18)
+plt.show()
+plt.savefig("matrice_di_mobilità_intergenerazionale_%.png")
+
+
+
+
+#########################################Two ROBUSTNESS CHECKS######################################################
+
+# Load the data into a Pandas dataframe
+df = pd.read_csv("pred.csv")
+
+########################### Robustness check 1#############################
+
+# Plot the proportion of observations in each quintile of predicted log(y)
+
+fig2, ax2 = plt.subplots()
+quintile_pred_y_counts = df['quintile_pred_y'].value_counts()
+ax2.bar(np.arange(5), quintile_pred_y_counts / N, align='center')
+plt.xlabel("Quintile of predicted log(y)")
+plt.ylabel("Proportion of observations")
+plt.xticks(np.arange(5), ["1", "2", "3", "4", "5"])
+
+# Plot the proportion of observations in each quintile of log(y) in son
+fig3, ax3 = plt.subplots()
+quintile_y_counts = df['quintile_y'].value_counts()
+ax3.bar(np.arange(5), quintile_y_counts / N, align='center')
+plt.xlabel("Quintile of log(y) in son")
+plt.ylabel("Proportion of observations")
+plt.xticks(np.arange(5), ["1", "2", "3", "4", "5"])
+
+#################### Robustness check 2###################################################
+
+# Calculate the distribution of starting quintiles
+quintile_y_counts = df['quintile_y'].value_counts().sort_index()
+quintile_y_proportions = quintile_y_counts / df.shape[0]
+
+# Calculate the distribution of ending quintiles
+quintile_pred_y_counts = df['quintile_pred_y'].value_counts().sort_index()
+quintile_pred_y_proportions = quintile_pred_y_counts / df.shape[0]
+
+# Create the stacked bar plot
+fig, ax = plt.subplots()
+
+bar_width = 0.35
+bar1 = ax.bar(np.arange(5) - bar_width/2, quintile_y_proportions, bar_width, label='Starting quintile')
+bar2 = ax.bar(np.arange(5) + bar_width/2, quintile_pred_y_proportions, bar_width, label='Ending quintile')
+
+ax.set_xlabel("Quintile")
+ax.set_ylabel("Proportion of observations")
+ax.set_xticks(np.arange(5))
+ax.legend()
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
